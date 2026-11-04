@@ -1,0 +1,84 @@
+/**
+ * All of the CSS for your public-facing functionality should be
+ * included in this file.
+ */
+
+.ccta-wrap {
+    display: block;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background: #fff;
+    transition: all ease .4s;s
+}
+.ccta-thumb {
+    position: relative;
+    overflow: hidden;
+}
+.ccta-thumb img {
+    transition: all ease .4s;
+}
+.ccta-thumb img {
+    display: block;
+}
+
+.ccta-thumb a::before,
+.ccta-thumb a::after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  content: '';
+  transition: all 0.3s ease;
+  z-index: 9;
+  opacity: 0;
+  transform: scaleY(2);
+  height: 101%;
+}
+
+.ccta-thumb a:hover::before,
+.ccta-thumb a:hover::after {
+  transform: scale(1);
+  opacity: 1;
+}
+.ccta-content {
+    padding: 1.5rem 1rem;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+.ccta-content-flex {
+    flex: 1;
+}
+.ccta-content-flex .ccta-content-title {
+    font-size: 17px;
+    margin-bottom: 0;
+}
+.ccta-content-right .ccta-content-view {
+    width: 100%;
+    height: 100%;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all ease .4s;
+}
+.ccta-content-right {
+    padding: 30px 26px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #1313c8;
+}
+.ccta-content-flex {
+    flex: 1;
+    padding: 1rem 5.5rem 1rem 1.5rem;
+}
+.ccta-content {
+    position: relative;
+    padding: 0;
+}
