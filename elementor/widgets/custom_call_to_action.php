@@ -1,11 +1,10 @@
 <?php
 
-use Elementor\Utils;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 use Elementor\Controls_Manager;
-use Elementor\Widget_Base;
-use Elementor\Plugin;
-use \Elementor\Repeater;
-use Elementor\Core\Schemes;
 
 class Elementor_custom_call_to_action extends \Elementor\Widget_Base {
 
@@ -205,7 +204,6 @@ class Elementor_custom_call_to_action extends \Elementor\Widget_Base {
 			[
 				'name' => 'background',
 				'types' => [ 'classic', 'gradient' ],
-				'selector' => '{{WRAPPER}} .ccta-thumb a::after',
 				'selector' => '{{WRAPPER}} .ccta-thumb a::before',
 			]
 		);
@@ -287,6 +285,7 @@ class Elementor_custom_call_to_action extends \Elementor\Widget_Base {
 				],
 				'selectors' => [
 					'{{WRAPPER}} .ccta-content-right i' => 'font-size: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .ccta-content-right svg' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
 				],
 				'separator' => 'before',
 			]
@@ -298,6 +297,7 @@ class Elementor_custom_call_to_action extends \Elementor\Widget_Base {
 				'type'      => \Elementor\Controls_Manager::COLOR,
 				'selectors' => array(
 					'{{WRAPPER}} .ccta-content-right i' => 'color: {{VALUE}}!important',
+					'{{WRAPPER}} .ccta-content-right svg' => 'fill: {{VALUE}}!important',
 
 				),
 			)
@@ -320,11 +320,6 @@ class Elementor_custom_call_to_action extends \Elementor\Widget_Base {
 	protected function render() {
 		$settings = $this->get_settings_for_display();
 
-		// Get image HTML
-		$this->add_render_attribute( 'image', 'src', $settings['image']['url'] );
-		$this->add_render_attribute( 'image', 'alt', \Elementor\Control_Media::get_image_alt( $settings['image'] ) );
-		$this->add_render_attribute( 'image', 'title', \Elementor\Control_Media::get_image_title( $settings['image'] ) );
-		$this->add_render_attribute( 'image', 'class', 'my-custom-class' );
 		if ( ! empty( $settings['image_link']['url'] ) ) {
 			$this->add_link_attributes( 'image_link', $settings['image_link'] );
 		}
@@ -335,34 +330,34 @@ class Elementor_custom_call_to_action extends \Elementor\Widget_Base {
 			$this->add_link_attributes( 'icon_link', $settings['icon_link'] );
 		}
 
-		$elementClass = 'container';
-		if ( $settings['hover_animation'] ) {
-			$elementClass .= ' elementor-animation-' . $settings['hover_animation'];
+		$element_class = 'container';
+		if ( ! empty( $settings['hover_animation'] ) ) {
+			$element_class .= ' elementor-animation-' . $settings['hover_animation'];
 		}
-		$this->add_render_attribute( 'wrapper', 'class', $elementClass );
-		 ?>
+		$this->add_render_attribute( 'wrapper', 'class', $element_class );
+
+		// render_icon() imprime el icono: aquí solo se comprueba que haya uno elegido.
+		$has_icon = ! empty( $settings['icon']['value'] );
+		?>
 		<div class="ccta-wrap">
-		<div class="ccta-thumb" <?php echo $this->get_render_attribute_string( 'wrapper' ); ?>>
-		<?php if(!empty($settings['image']['url'])){ ?>
-		<a <?php echo $this->get_render_attribute_string( 'image_link' ); ?>>
-		<?php echo \Elementor\Group_Control_Image_Size::get_attachment_image_html( $settings, 'thumbnail', 'image' ); ?> </a><?php } ?>
+		<div class="ccta-thumb" <?php $this->print_render_attribute_string( 'wrapper' ); ?>>
+		<?php if ( ! empty( $settings['image']['url'] ) ) { ?>
+		<a <?php $this->print_render_attribute_string( 'image_link' ); ?>>
+		<?php echo \Elementor\Group_Control_Image_Size::get_attachment_image_html( $settings, 'thumbnail', 'image' ); // phpcs:ignore WordPress.Security.EscapeOutput ?> </a><?php } ?>
 		</div>
 		<div class="ccta-content">
 		<div class="ccta-content-flex">
-		<?php if(!empty($settings['widget_title'])){ ?>
-		<a <?php echo $this->get_render_attribute_string( 'title_link' ); ?>>	
-		<h4 class="ccta-content-title"><?php echo $settings['widget_title']; ?></h4></a><?php } ?>
-		<?php if(!empty($settings['item_description'])){ ?>
-		<div class="ccta-description"><?php echo $settings['item_description']; ?></div><?php } ?> </div>
-		<?php if(!empty(\Elementor\Icons_Manager::render_icon( $settings['icon'], [ 'aria-hidden' => 'true' ] ))){ ?>
+		<?php if ( ! empty( $settings['widget_title'] ) ) { ?>
+		<a <?php $this->print_render_attribute_string( 'title_link' ); ?>>
+		<h4 class="ccta-content-title"><?php echo wp_kses_post( $settings['widget_title'] ); ?></h4></a><?php } ?>
+		<?php if ( ! empty( $settings['item_description'] ) ) { ?>
+		<div class="ccta-description"><?php echo wp_kses_post( $settings['item_description'] ); ?></div><?php } ?> </div>
+		<?php if ( $has_icon ) { ?>
 		<div class="ccta-content-right">
-		<a <?php echo $this->get_render_attribute_string( 'icon_link' ); ?>><?php \Elementor\Icons_Manager::render_icon( $settings['icon'], [ 'aria-hidden' => 'true' ] ); ?></a>
+		<a <?php $this->print_render_attribute_string( 'icon_link' ); ?>><?php \Elementor\Icons_Manager::render_icon( $settings['icon'], [ 'aria-hidden' => 'true' ] ); ?></a>
 		</div><?php } ?>
 		</div>
 		</div>
-
-
 		<?php
 	}
 }
-?>

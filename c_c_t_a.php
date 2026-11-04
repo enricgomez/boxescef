@@ -16,7 +16,7 @@
  * Plugin Name:       Custom Call to action Elementor Addon
  * Plugin URI:        https://www.enricgomez.com
  * Description:       A custom elementor add-on which adds a custom call to action elementor element with image, title, description and icon.
- * Version:           2.0.0
+ * Version:           2.1.0
  * Author:            Asif. Modified by enricgomez
  * Author URI:        https://www.enricgomez.com
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 2.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'C_C_T_A_VERSION', '2.0.0' );
+define( 'C_C_T_A_VERSION', '2.1.0' );
 
 /**
  * The code that runs during plugin activation.
@@ -91,29 +91,38 @@ function register_custom_call_to_action( $widgets_manager ) {
 add_action( 'elementor/widgets/register', 'register_custom_call_to_action' );
 
 
-/* ENRIC - Translate WPML */
+/* ENRIC - Translate WPML: textos y enlaces del widget. */
 add_filter( 'wpml_elementor_widgets_to_translate', function( $widgets ) {
-    $widgets['custom_call_to_action'] = [
-        'conditions' => [ 'widgetType' => 'custom_call_to_action' ],
-        'fields'     => [
-            [
-                'field'       => 'widget_title', // Este es el nombre del control
-                'type'        => __( 'text', 'custom_call_to_action' ),
-                'editor_type' => 'LINE' // o 'AREA' para textareas, 'VISUAL' para un editor WYSIWYG
-            ],
-			[
-                'field'       => 'item_description', // Este es el nombre del control
-                'type'        => __( 'textarea', 'custom_call_to_action' ),
-                'editor_type' => 'AREA' // o 'AREA' para textareas, 'VISUAL' para un editor WYSIWYG
-            ],
-			[
-                'field'       => 'image_link', // Este es el nombre del control
-                'type'        => __( 'Link', 'custom_call_to_action' ),
-                'editor_type' => 'LINK' // o 'AREA' para textareas, 'VISUAL' para un editor WYSIWYG
-            ],
-            // ...otros campos si existen
-        ],
-    ];
-    return $widgets;
+	$widgets['custom_call_to_action'] = array(
+		'conditions' => array( 'widgetType' => 'custom_call_to_action' ),
+		'fields'     => array(
+			array(
+				'field'       => 'widget_title',
+				'type'        => __( 'Custom Call To Action: title', 'c_c_t_a' ),
+				'editor_type' => 'LINE',
+			),
+			array(
+				'field'       => 'item_description',
+				'type'        => __( 'Custom Call To Action: description', 'c_c_t_a' ),
+				'editor_type' => 'AREA',
+			),
+			// Los controles URL se traducen por su subcampo url, con el nombre del control como clave.
+			'image_link' => array(
+				'field'       => 'url',
+				'type'        => __( 'Custom Call To Action: image link', 'c_c_t_a' ),
+				'editor_type' => 'LINK',
+			),
+			'title_link' => array(
+				'field'       => 'url',
+				'type'        => __( 'Custom Call To Action: title link', 'c_c_t_a' ),
+				'editor_type' => 'LINK',
+			),
+			'icon_link'  => array(
+				'field'       => 'url',
+				'type'        => __( 'Custom Call To Action: icon link', 'c_c_t_a' ),
+				'editor_type' => 'LINK',
+			),
+		),
+	);
+	return $widgets;
 } );
-
